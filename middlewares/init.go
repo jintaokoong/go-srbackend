@@ -13,14 +13,17 @@ import (
 
 func Secure(client *mongo.Client) gin.HandlerFunc {
 	col := client.Database("ddsrdb").Collection("apikeys")
+	log := logger.GetInstance()
 	return func(c *gin.Context) {
 		key := c.Request.Header.Get("x-api-key")
 		if len(key) == 0 {
+			log.Println("key:", key, len(key))
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 			return
 		}
 		res := col.FindOne(context.TODO(), bson.M{"value": key})
 		if res.Err() != nil {
+			log.Println(res.Err().Error())
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
 			return
 		}
