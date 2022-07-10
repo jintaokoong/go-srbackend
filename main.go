@@ -49,7 +49,7 @@ func main() {
 		apis.GET("/status", routers.FindStatus(client))
 		apis.PATCH("/status", routers.ToggleStatus(client))
 		apis.GET("/requests", routers.ListRequests(client))
-		apis.POST("/requests", routers.CreateRequest(client))
+		apis.POST("/requests", middlewares.CheckStatus(client), routers.CreateRequest(client))
 		apis.PATCH("/requests/:id", routers.ToggleRequest(client))
 		apis.DELETE("/requests/:id", routers.DeleteRequest(client))
 	}
