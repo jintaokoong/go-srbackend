@@ -18,11 +18,11 @@ type ApiError struct {
 }
 
 type Configuration struct {
-	ID        primitive.ObjectID `bson:"_id,omitempty" json:"_id"`
+	ID        primitive.ObjectID `bson:"_id,omitempty" json:"-"`
 	Name      string             `bson:"name,omitempty" json:"name"`
 	Value     any                `bson:"value,omitempty" json:"value"`
-	CreatedAt time.Time          `bson:"createdAt,omitempty" json:"createdAt"`
-	UpdatedAt time.Time          `bson:"updatedAt,omitempty" json:"updatedAt"`
+	CreatedAt time.Time          `bson:"createdAt,omitempty" json:"-"`
+	UpdatedAt time.Time          `bson:"updatedAt,omitempty" json:"-"`
 }
 
 func FindStatus(client *mongo.Client) gin.HandlerFunc {
