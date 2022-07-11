@@ -91,6 +91,8 @@ func ListRequests(client *mongo.Client) func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"data":       requests,
 			"records":    count,
+			"page":       params.Page,
+			"pageSize":   params.PageSize,
 			"totalPages": math.Ceil(float64(count) / float64(params.PageSize)),
 		})
 	}
