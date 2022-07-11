@@ -42,6 +42,7 @@ func ListRequests(client *mongo.Client) func(ctx *gin.Context) {
 	col := client.Database("ddsrdb").Collection("requests")
 	log := logger.GetInstance()
 	return func(ctx *gin.Context) {
+		t := time.Now()
 		params := RequestListParams{
 			Page:     1,
 			PageSize: 10,
@@ -50,6 +51,7 @@ func ListRequests(client *mongo.Client) func(ctx *gin.Context) {
 			ctx.AbortWithStatusJSON(400, gin.H{"message": "bad query params"})
 			return
 		}
+		log.Println("params bound", "time elapsed:", time.Since(t))
 
 		var requests []SongRequest = make([]SongRequest, 0)
 
@@ -75,6 +77,8 @@ func ListRequests(client *mongo.Client) func(ctx *gin.Context) {
 			})
 			return
 		}
+		log.Println("documents found", "time elapsed:", time.Since(t))
+
 		count, err := col.CountDocuments(ctx, filter)
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
@@ -82,6 +86,7 @@ func ListRequests(client *mongo.Client) func(ctx *gin.Context) {
 			})
 			return
 		}
+		log.Println("documents counted", "time elapsed:", time.Since(t))
 
 		ctx.JSON(http.StatusOK, gin.H{
 			"data":       requests,
